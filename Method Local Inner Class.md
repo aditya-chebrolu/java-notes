@@ -11,24 +11,122 @@
 - **Non-static:** The inner class cannot be static.
 - **Accessing variables:** If the method has local variables with the same name as the instance variables of the outer class, the local variables will shadow the instance variables of the outer class.
 
-### Example Explanation
+### Code Examples
 
-1. **Local variable access:**
-   - Local variables of the method can be accessed by the inner class.
-   - Example diagram shows local variables and instantiation of the inner class within the method.
+#### Example 1: Basic Method Local Inner Class
 
-2. **Static Method Case:**
-   - In case the method is static, the inner class can only access static members of the outer class.
-   - The inner class in a static method is effectively static.
+```java
+public class OuterClass {
+    public void outerMethod() {
+        final int localVar = 10; // Must be final or effectively final
 
-3. **Naming conflicts:**
-   - If a local variable of the method has the same name as an instance variable of the outer class, use `Outer.this.var` to access the instance variable.
-   - Directly using the variable name will refer to the local variable.
+        // Method local inner class
+        class InnerClass {
+            public void display() {
+                System.out.println("Local variable: " + localVar);
+            }
+        }
+
+        // Instantiating the inner class inside the method
+        InnerClass inner = new InnerClass();
+        inner.display();
+    }
+
+    public static void main(String[] args) {
+        OuterClass outer = new OuterClass();
+        outer.outerMethod();
+    }
+}
+```
+
+#### Example 2: Accessing Outer Class Members
+
+```java
+public class OuterClass {
+    private int instanceVar = 20;
+
+    public void outerMethod() {
+        final int localVar = 10; // Must be final or effectively final
+
+        // Method local inner class
+        class InnerClass {
+            public void display() {
+                System.out.println("Local variable: " + localVar);
+                System.out.println("Instance variable: " + instanceVar);
+            }
+        }
+
+        // Instantiating the inner class inside the method
+        InnerClass inner = new InnerClass();
+        inner.display();
+    }
+
+    public static void main(String[] args) {
+        OuterClass outer = new OuterClass();
+        outer.outerMethod();
+    }
+}
+```
+
+#### Example 3: Static Method Case
+
+```java
+public class OuterClass {
+    private static int staticVar = 30;
+
+    public static void outerStaticMethod() {
+        final int localVar = 10; // Must be final or effectively final
+
+        // Method local inner class
+        class InnerClass {
+            public void display() {
+                System.out.println("Local variable: " + localVar);
+                System.out.println("Static variable: " + staticVar);
+            }
+        }
+
+        // Instantiating the inner class inside the static method
+        InnerClass inner = new InnerClass();
+        inner.display();
+    }
+
+    public static void main(String[] args) {
+        OuterClass.outerStaticMethod();
+    }
+}
+```
+
+#### Example 4: Naming Conflicts
+
+```java
+public class OuterClass {
+    private int var = 40;
+
+    public void outerMethod() {
+        final int var = 10; // Local variable with the same name
+
+        // Method local inner class
+        class InnerClass {
+            public void display() {
+                System.out.println("Local variable: " + var);
+                System.out.println("Instance variable: " + OuterClass.this.var);
+            }
+        }
+
+        // Instantiating the inner class inside the method
+        InnerClass inner = new InnerClass();
+        inner.display();
+    }
+
+    public static void main(String[] args) {
+        OuterClass outer = new OuterClass();
+        outer.outerMethod();
+    }
+}
+```
 
 ### Additional Clarifications:
 
 - **Scope and Access:**
   - The inner class can access the enclosing method's local variables if they are final or effectively final.
   - Using `Outer.this.var` in the case of non-static variables allows access to the instance variable from the outer class, preventing naming conflicts.
-
-These points should help clarify the usage and constraints of method local inner classes in Java.
